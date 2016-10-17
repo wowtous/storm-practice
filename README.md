@@ -42,6 +42,13 @@ services:
             - nimbus
             - zookeeper
         restart: always
+    
+    redis:
+        image: redis:latest
+        container_name: redis
+        restart: always
+        ports:
+            - 6379:6379
 
 networks:
   default:
@@ -65,8 +72,7 @@ docker-compose rm    # remove
 ```
 
 4. storm ui monitor
-
-[127.0.0.1:8080](127.0.0.1:8080)
+> [127.0.0.1:8080](127.0.0.1:8080)
 
 
 ## package and publish
