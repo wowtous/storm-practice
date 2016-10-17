@@ -3,7 +3,7 @@
 ## build docker environment
 The version of docker is 1.9 or above.
 
-1. `docker-compose.yml`
+1.`docker-compose.yml`
 
 ```yml
 version: '2'
@@ -42,7 +42,7 @@ services:
             - nimbus
             - zookeeper
         restart: always
-    
+
     redis:
         image: redis:latest
         container_name: redis
@@ -56,14 +56,14 @@ networks:
       name: foo
 ```
 
-2. Create a network `foo`
+2.Create a network `foo`
 
 ```sh
 docker network ls
 docker network create foo
 ```
 
-3. Manage storm local cluster
+3.Manage storm local cluster
 
 ```sh
 docker-compose up -d # start
@@ -71,15 +71,14 @@ docker-compose stop  # stop
 docker-compose rm    # remove
 ```
 
-4. storm ui monitor
-> [127.0.0.1:8080](127.0.0.1:8080)
+4.storm ui monitor,[`127.0.0.1:8080`](127.0.0.1:8080)
 
 
 ## package and publish
 
 ```sh
 ## package
-cd . 
+cd .
 mvn package
 
 ## publish
