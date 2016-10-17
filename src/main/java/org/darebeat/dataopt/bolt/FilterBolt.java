@@ -1,28 +1,22 @@
 package org.darebeat.dataopt.bolt;
 
-import backtype.storm.task.OutputCollector;
-import backtype.storm.task.TopologyContext;
-import backtype.storm.topology.IRichBolt;
-import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.tuple.Fields;
-import backtype.storm.tuple.Tuple;
-import backtype.storm.tuple.Values;
-import com.blogchong.storm.dataopttopology.util.ConfCheck;
-import com.blogchong.storm.dataopttopology.util.MacroDef;
-import com.blogchong.storm.dataopttopology.xml.FilterXml;
+import org.apache.storm.task.OutputCollector;
+import org.apache.storm.task.TopologyContext;
+import org.apache.storm.topology.IRichBolt;
+import org.apache.storm.topology.OutputFieldsDeclarer;
+import org.apache.storm.tuple.Fields;
+import org.apache.storm.tuple.Tuple;
+import org.apache.storm.tuple.Values;
+import org.darebeat.dataopt.util.ConfCheck;
+import org.darebeat.dataopt.util.MacroDef;
+import org.darebeat.dataopt.xml.FilterXml;
+
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @author blogchong
- * @version 2015年06月07日 上午14:31:25
- * @Blog www.blogchong.com
- * @米特吧大数据论坛　www.mite8.com
- * @email blogchong@163.com
- * @QQ_G 191321336
- * @Weixin: blogchong
- * @Des 过滤Bolt，进行数据的正则过滤，范围过滤以及普通字符串过滤
+ * 过滤Bolt，进行数据的正则过滤，范围过滤以及普通字符串过滤
  */
 
 @SuppressWarnings("serial")
@@ -137,29 +131,7 @@ public class FilterBolt implements IRichBolt {
 		int flag = 0;
 
 		if (logic.equals(MacroDef.RULE_AND)) {
-			for (int i = 0; i < flag_init; i++) {
-				if (types[i].equals(MacroDef.RLUE_REGULAR)) {
-					boolean regu = regular(str, fields[i], values[i]);
-					if (regu) {
-						flag++;
-					}
-				} else if (types[i].equals(MacroDef.RULE_RANGE)) {
-					boolean ran = range(str, fields[i], values[i]);
-					if (ran) {
-						flag++;
-					}
-				} else if (types[i].equals(MacroDef.RULE_ROUTINE0)) {
-					boolean rou0 = routine0(str, fields[i], values[i]);
-					if (rou0) {
-						flag++;
-					}
-				} else if (types[i].equals(MacroDef.RULE_ROUTINE1)) {
-					boolean rou1 = routine1(str, fields[i], values[i]);
-					if (rou1) {
-						flag++;
-					}
-				}
-			}
+			flag = getFlag(str, types, fields, values, flag_init, flag);
 
 			if (flag == flag_init) {
 				return true;
@@ -168,30 +140,8 @@ public class FilterBolt implements IRichBolt {
 			}
 			
 		} else if (logic.equals(MacroDef.RULE_OR)) {
-			
-			for (int i = 0; i < flag_init; i++) {
-				if (types[i].equals(MacroDef.RLUE_REGULAR)) {
-					boolean regu = regular(str, fields[i], values[i]);
-					if (regu) {
-						flag++;
-					}
-				} else if (types[i].equals(MacroDef.RULE_RANGE)) {
-					boolean ran = range(str, fields[i], values[i]);
-					if (ran) {
-						flag++;
-					}
-				} else if (types[i].equals(MacroDef.RULE_ROUTINE0)) {
-					boolean rou0 = routine0(str, fields[i], values[i]);
-					if (rou0) {
-						flag++;
-					}
-				} else if (types[i].equals(MacroDef.RULE_ROUTINE1)) {
-					boolean rou1 = routine1(str, fields[i], values[i]);
-					if (rou1) {
-						flag++;
-					}
-				}
-			}
+
+			flag = getFlag(str, types, fields, values, flag_init, flag);
 			if (flag != 0) {
 				return true;
 			} else {
@@ -201,7 +151,34 @@ public class FilterBolt implements IRichBolt {
 		return false;
 	}
 
-    // 正则匹配判断
+	private int getFlag(String str, String[] types, String[] fields, String[] values, int flag_init, int flag) {
+		for (int i = 0; i < flag_init; i++) {
+            if (types[i].equals(MacroDef.RLUE_REGULAR)) {
+                boolean regu = regular(str, fields[i], values[i]);
+                if (regu) {
+                    flag++;
+                }
+            } else if (types[i].equals(MacroDef.RULE_RANGE)) {
+                boolean ran = range(str, fields[i], values[i]);
+                if (ran) {
+                    flag++;
+                }
+            } else if (types[i].equals(MacroDef.RULE_ROUTINE0)) {
+                boolean rou0 = routine0(str, fields[i], values[i]);
+                if (rou0) {
+                    flag++;
+                }
+            } else if (types[i].equals(MacroDef.RULE_ROUTINE1)) {
+                boolean rou1 = routine1(str, fields[i], values[i]);
+                if (rou1) {
+                    flag++;
+                }
+            }
+        }
+		return flag;
+	}
+
+	// 正则匹配判断
 	private boolean regular(String str, String field, String value) {
 		String[] strs = str.split(MacroDef.FLAG_TABS);
 

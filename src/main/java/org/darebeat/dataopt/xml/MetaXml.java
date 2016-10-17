@@ -1,22 +1,16 @@
 package org.darebeat.dataopt.xml;
 
-import java.io.File;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
-import com.blogchong.storm.dataopttopology.util.MacroDef;
+import org.darebeat.dataopt.util.MacroDef;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
+
 /**
- * @author blogchong
- * @Blog   www.blogchong.com
- * @米特吧大数据论坛　www.mite8.com
- * @email  blogchong@163.com
- * @QQ_G   191321336
- * @Weixin: blogchong
- * @version 2015年06月07日 上午12:31:25
- * @Des  消费者Metaq接口的配置xml读取接口
+ * 消费者Metaq接口的配置xml读取接口
  */
 
 public class MetaXml {

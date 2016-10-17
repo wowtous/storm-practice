@@ -1,26 +1,20 @@
 package org.darebeat.dataopt.spout;
 
+import org.apache.storm.spout.SpoutOutputCollector;
+import org.apache.storm.task.TopologyContext;
+import org.apache.storm.topology.IRichSpout;
+import org.apache.storm.topology.OutputFieldsDeclarer;
+import org.apache.storm.tuple.Fields;
+import org.apache.storm.tuple.Values;
+import org.darebeat.dataopt.util.MacroDef;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
-import backtype.storm.spout.SpoutOutputCollector;
-import backtype.storm.task.TopologyContext;
-import backtype.storm.topology.IRichSpout;
-import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.tuple.Fields;
-import backtype.storm.tuple.Values;
-import com.blogchong.storm.dataopttopology.util.MacroDef;
 
 /**
- * @author blogchong
- * @version 2015年06月07日 上午11:31:25
- * @Blog www.blogchong.com
- * @米特吧大数据论坛　www.mite8.com
- * @email blogchong@163.com
- * @QQ_G 191321336
- * @Weixin: blogchong
- * @Des Spout数据源，从log文件中直接读取数据
+ * Spout数据源，从log文件中直接读取数据
  */
 
 public class ReadLogSpout implements IRichSpout {

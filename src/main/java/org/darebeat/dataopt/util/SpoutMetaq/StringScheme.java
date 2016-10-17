@@ -1,22 +1,16 @@
 package org.darebeat.dataopt.util.SpoutMetaq;
 
-import backtype.storm.spout.Scheme;
-import backtype.storm.tuple.Fields;
-import backtype.storm.tuple.Values;
-import com.blogchong.storm.dataopttopology.util.MacroDef;
+import org.apache.storm.spout.Scheme;
+import org.apache.storm.tuple.Fields;
+import org.apache.storm.tuple.Values;
+import org.darebeat.dataopt.util.MacroDef;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
 import java.util.List;
 
 /**
- * @author blogchong
- * @Blog   www.blogchong.com
- * @米特吧大数据论坛　www.mite8.com
- * @email  blogchong@163.com
- * @QQ_G   191321336
- * @Weixin: blogchong
- * @version 2015年06月07日 上午14:31:25
- * @Des Meta消息封装
+ * Meta消息封装
  */
 
 //规范化输出，定义编码
@@ -34,6 +28,11 @@ public class StringScheme implements Scheme {
 			throw new RuntimeException(e);
 
 		}
+	}
+
+	@Override
+	public List<Object> deserialize(ByteBuffer byteBuffer) {
+		return null;
 	}
 
 	public Fields getOutputFields() {

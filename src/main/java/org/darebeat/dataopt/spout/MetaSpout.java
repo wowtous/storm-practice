@@ -1,41 +1,36 @@
 package org.darebeat.dataopt.spout;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executor;
-import java.util.concurrent.TimeUnit;
-import com.blogchong.storm.dataopttopology.util.ConfCheck;
-import com.blogchong.storm.dataopttopology.util.MacroDef;
-import com.blogchong.storm.dataopttopology.util.SpoutMetaq.MetaMessageWrapper;
-import com.blogchong.storm.dataopttopology.util.SpoutMetaq.StringScheme;
-import com.blogchong.storm.dataopttopology.xml.SpoutXml;
-import com.taobao.gecko.core.util.LinkedTransferQueue;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import backtype.storm.spout.Scheme;
-import backtype.storm.spout.SpoutOutputCollector;
-import backtype.storm.task.TopologyContext;
-import backtype.storm.topology.IRichSpout;
-import backtype.storm.topology.OutputFieldsDeclarer;
-import com.taobao.metamorphosis.client.MetaClientConfig;
-import com.taobao.metamorphosis.exception.MetaClientException;
-import com.taobao.metamorphosis.utils.ZkUtils.ZKConfig;
 import com.taobao.metamorphosis.Message;
 import com.taobao.metamorphosis.client.MessageSessionFactory;
+import com.taobao.metamorphosis.client.MetaClientConfig;
 import com.taobao.metamorphosis.client.MetaMessageSessionFactory;
 import com.taobao.metamorphosis.client.consumer.ConsumerConfig;
 import com.taobao.metamorphosis.client.consumer.MessageConsumer;
 import com.taobao.metamorphosis.client.consumer.MessageListener;
+import com.taobao.metamorphosis.exception.MetaClientException;
+import com.taobao.metamorphosis.utils.ZkUtils.ZKConfig;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.storm.spout.Scheme;
+import org.apache.storm.spout.SpoutOutputCollector;
+import org.apache.storm.task.TopologyContext;
+import org.apache.storm.topology.IRichSpout;
+import org.apache.storm.topology.OutputFieldsDeclarer;
+import org.darebeat.dataopt.util.ConfCheck;
+import org.darebeat.dataopt.util.MacroDef;
+import org.darebeat.dataopt.util.SpoutMetaq.MetaMessageWrapper;
+import org.darebeat.dataopt.util.SpoutMetaq.StringScheme;
+import org.darebeat.dataopt.xml.SpoutXml;
+
+import java.nio.ByteBuffer;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executor;
+import java.util.concurrent.LinkedTransferQueue;
+import java.util.concurrent.TimeUnit;
 
 /**
- * @author blogchong
- * @version 2015年06月07日 上午11:31:25
- * @Blog www.blogchong.com
- * @米特吧大数据论坛　www.mite8.com
- * @email blogchong@163.com
- * @QQ_G 191321336
- * @Weixin: blogchong
- * @Des Spout数据源，从metaq中消费数据
+ * Spout数据源，从metaq中消费数据
  */
 
 public class MetaSpout implements IRichSpout {
@@ -255,7 +250,7 @@ public class MetaSpout implements IRichSpout {
 
                     // 数据发布操作
                     this.collector.emit(
-                            this.scheme.deserialize(message.getData()),
+                            this.scheme.deserialize(ByteBuffer.wrap(message.getData())),
                             message.getId());
                     Thread.sleep(100);
 

@@ -1,22 +1,21 @@
 package org.darebeat.log;
 
-import org.learningstorm.log.bolt.IndexerBolt;
-import org.learningstorm.log.bolt.LogRulesBolt;
-import org.learningstorm.log.bolt.VolumeCountingBolt;
-import org.learningstorm.log.common.Conf;
-import org.learningstorm.log.spout.LogSpout;
+import org.apache.storm.Config;
+import org.apache.storm.LocalCluster;
+import org.apache.storm.StormSubmitter;
+import org.apache.storm.generated.AlreadyAliveException;
+import org.apache.storm.generated.AuthorizationException;
+import org.apache.storm.generated.InvalidTopologyException;
+import org.apache.storm.topology.TopologyBuilder;
+import org.apache.storm.utils.Utils;
+import org.darebeat.log.bolt.IndexerBolt;
+import org.darebeat.log.bolt.LogRulesBolt;
+import org.darebeat.log.bolt.VolumeCountingBolt;
+import org.darebeat.log.common.Conf;
+import org.darebeat.log.spout.LogSpout;
 
-import com.hmsonline.storm.cassandra.bolt.CassandraCounterBatchingBolt;
-
-import backtype.storm.Config;
-import backtype.storm.LocalCluster;
-import backtype.storm.StormSubmitter;
-import backtype.storm.contrib.cassandra.bolt.AckStrategy;
-import backtype.storm.contrib.cassandra.bolt.CassandraBolt;
-import backtype.storm.generated.AlreadyAliveException;
-import backtype.storm.generated.InvalidTopologyException;
-import backtype.storm.topology.TopologyBuilder;
-import backtype.storm.utils.Utils;
+import static com.hmsonline.storm.cassandra.StormCassandraConstants.CASSANDRA_HOST;
+import static com.hmsonline.storm.cassandra.StormCassandraConstants.CASSANDRA_KEYSPACE;
 
 public class LogTopology {
 	private TopologyBuilder builder = new TopologyBuilder();
@@ -43,7 +42,7 @@ public class LogTopology {
 //			.shuffleGrouping("counter");
 		
 		conf.put(Conf.REDIS_PORT_KEY, Conf.DEFAULT_JEDIS_PORT);
-		conf.put(CassandraBolt.CASSANDRA_KEYSPACE, Conf.LOGGING_KEYSPACE);
+		conf.put(CASSANDRA_KEYSPACE, Conf.LOGGING_KEYSPACE);
 	}
 	
 	public TopologyBuilder getBuilder() {
@@ -61,7 +60,7 @@ public class LogTopology {
 	public void runLocal(int runTime) {
 		conf.setDebug(true);
 		conf.put(Conf.REDIS_HOST_KEY, "localhost");
-		conf.put(CassandraBolt.CASSANDRA_HOST, "localhost:9171");
+		conf.put(CASSANDRA_HOST, "localhost:9171");
 		cluster = new LocalCluster();
 		cluster.submitTopology("test", conf, builder.createTopology());
 		if (runTime > 0) {
@@ -78,10 +77,10 @@ public class LogTopology {
 	}
 
 	public void runCluster(String name, String redisHost, String cassandraHost)
-			throws AlreadyAliveException, InvalidTopologyException {
+			throws AlreadyAliveException, InvalidTopologyException, AuthorizationException {
 		conf.setNumWorkers(20);
 		conf.put(Conf.REDIS_HOST_KEY, redisHost);
-		conf.put(CassandraBolt.CASSANDRA_HOST, cassandraHost);
+		conf.put(CASSANDRA_HOST, cassandraHost);
 		StormSubmitter.submitTopology(name, conf, builder.createTopology());
 	}
 

@@ -1,33 +1,26 @@
 package org.darebeat.dataopt.bolt;
 
-import java.util.Map;
-
-import com.blogchong.storm.dataopttopology.util.ConfCheck;
-import com.blogchong.storm.dataopttopology.util.MacroDef;
-import com.blogchong.storm.dataopttopology.xml.MetaXml;
-import com.taobao.metamorphosis.client.MetaClientConfig;
-import com.taobao.metamorphosis.exception.MetaClientException;
-import com.taobao.metamorphosis.utils.ZkUtils.ZKConfig;
 import com.taobao.metamorphosis.Message;
 import com.taobao.metamorphosis.client.MessageSessionFactory;
+import com.taobao.metamorphosis.client.MetaClientConfig;
 import com.taobao.metamorphosis.client.MetaMessageSessionFactory;
 import com.taobao.metamorphosis.client.producer.MessageProducer;
 import com.taobao.metamorphosis.client.producer.SendResult;
-import backtype.storm.task.OutputCollector;
-import backtype.storm.task.TopologyContext;
-import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.topology.IRichBolt;
-import backtype.storm.tuple.Tuple;
+import com.taobao.metamorphosis.exception.MetaClientException;
+import com.taobao.metamorphosis.utils.ZkUtils.ZKConfig;
+import org.apache.storm.task.OutputCollector;
+import org.apache.storm.task.TopologyContext;
+import org.apache.storm.topology.IRichBolt;
+import org.apache.storm.topology.OutputFieldsDeclarer;
+import org.apache.storm.tuple.Tuple;
+import org.darebeat.dataopt.util.ConfCheck;
+import org.darebeat.dataopt.util.MacroDef;
+import org.darebeat.dataopt.xml.MetaXml;
+
+import java.util.Map;
 
 /**
- * @author blogchong
- * @version 2015年06月07日 上午14:31:25
- * @Blog www.blogchong.com
- * @米特吧大数据论坛　www.mite8.com
- * @email blogchong@163.com
- * @QQ_G 191321336
- * @Weixin: blogchong
- * @Des Metaq回写Bolt，数据生产
+ * Metaq回写Bolt，数据生产
  */
 
 @SuppressWarnings("serial")

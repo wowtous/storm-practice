@@ -1,14 +1,7 @@
 package org.darebeat.dataopt.util;
 
 /**
- * @author blogchong
- * @Blog   www.blogchong.com
- * @米特吧大数据论坛　www.mite8.com
- * @email  blogchong@163.com
- * @QQ_G   191321336
- * @Weixin: blogchong
- * @version 2015年06月07日 上午11:31:25
- * @Des  全局的一些类似宏定义
+ * 全局的一些类似宏定义
  */
 
 public  class MacroDef {

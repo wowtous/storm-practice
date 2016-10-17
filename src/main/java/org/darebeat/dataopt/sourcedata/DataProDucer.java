@@ -10,20 +10,13 @@ import com.taobao.metamorphosis.utils.ZkUtils;
 import java.util.Random;
 
 /**
- * @author blogchong
- * @version 2015年06月15日 上午19:31:25
- * @Blog www.blogchong.com
- * @米特吧大数据论坛　www.mite8.com
- * @email blogchong@163.com
- * @QQ_G 191321336
- * @Weixin: blogchong
- * @Des 构造一个随机的域名交易信息源，以生产到metaq中
+ * 构造一个随机的域名交易信息源，以生产到metaq中
  */
 
 //该的目的是构造一个随机的domain数据集
 public class DataProDucer {
 
-    private static String topic = "blogchong-test";
+    private static String topic = "storm-test";
     private static String zkRoot = "/meta";
     private static String zkConnect = "192.168.5.240:2181";
 
@@ -63,15 +56,13 @@ public class DataProDucer {
 
         while (true) {
             // 构造域名
-            String net = "www." + net0[random.nextInt(net0.length)] + "."
-                    + net1[random.nextInt(net1.length)];
+            String net = "www." + net0[random.nextInt(net0.length)] + "." + net1[random.nextInt(net1.length)];
             String records = net + "\t" + value[random.nextInt(value.length)] + "\t"
                     + times[random.nextInt(times.length)] + "\t"
                     + validity[random.nextInt(validity.length)] + "\t"
                     + seller[random.nextInt(seller.length)];
 
-            sendResult = messageProducer
-                    .sendMessage(new Message(topic, (records).getBytes()));
+            sendResult = messageProducer.sendMessage(new Message(topic, (records).getBytes()));
 
             if (sendResult.isSuccess()) {
                 System.out.println("消息：[" + records + "] 发送成功！");

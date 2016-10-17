@@ -10,14 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Random;
 
 /**
- * @author blogchong
- * @version 2015年06月07日 上午14:31:25
- * @Blog www.blogchong.com
- * @米特吧大数据论坛　www.mite8.com
- * @email blogchong@163.com
- * @QQ_G 191321336
- * @Weixin: blogchong
- * @Des 构造一个随机的域名交易信息源，写入文件中
+ * 构造一个随机的域名交易信息源，写入文件中
  */
 
 //该的目的是构造一个随机的domain数据集

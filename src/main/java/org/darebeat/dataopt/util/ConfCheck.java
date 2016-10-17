@@ -1,23 +1,14 @@
 package org.darebeat.dataopt.util;
 
-import com.blogchong.storm.dataopttopology.bolt.FilterBolt;
-import com.blogchong.storm.dataopttopology.bolt.MetaBolt;
-import com.blogchong.storm.dataopttopology.bolt.MysqlBolt;
-import com.blogchong.storm.dataopttopology.spout.MetaSpout;
+import org.darebeat.dataopt.bolt.FilterBolt;
+import org.darebeat.dataopt.bolt.MetaBolt;
+import org.darebeat.dataopt.bolt.MysqlBolt;
+import org.darebeat.dataopt.spout.MetaSpout;
+
 import java.io.File;
 
 /**
- * @author blogchong
- * @Blog   www.blogchong.com
- * @米特吧大数据论坛　www.mite8.com
- * @email  blogchong@163.com
- * @QQ_G   191321336
- * @Weixin: blogchong
- * @version 2015年06月07日 上午14:31:25
- * @Des  对配置文件进行动态监测
- */
-
-/**
+ * 对配置文件进行动态监测
  * 该函数定时检测配置文件是否发生改变，
  * 实现了Topology的动态配置 即在不重启top的情况下，实现数据处理的动态配置
  */

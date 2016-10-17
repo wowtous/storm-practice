@@ -1,25 +1,19 @@
 package org.darebeat.dataopt.bolt;
 
+import org.apache.storm.task.OutputCollector;
+import org.apache.storm.task.TopologyContext;
+import org.apache.storm.topology.IRichBolt;
+import org.apache.storm.topology.OutputFieldsDeclarer;
+import org.apache.storm.tuple.Tuple;
+import org.darebeat.dataopt.util.ConfCheck;
+import org.darebeat.dataopt.util.MacroDef;
+import org.darebeat.dataopt.util.MysqlOpt;
+import org.darebeat.dataopt.xml.MysqlXml;
+
 import java.util.Map;
-import backtype.storm.task.OutputCollector;
-import backtype.storm.task.TopologyContext;
-import backtype.storm.topology.IRichBolt;
-import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.tuple.Tuple;
-import com.blogchong.storm.dataopttopology.util.ConfCheck;
-import com.blogchong.storm.dataopttopology.util.MacroDef;
-import com.blogchong.storm.dataopttopology.util.MysqlOpt;
-import com.blogchong.storm.dataopttopology.xml.MysqlXml;
 
 /**
- * @author blogchong
- * @version 2015年06月07日 上午14:31:25
- * @Blog www.blogchong.com
- * @米特吧大数据论坛　www.mite8.com
- * @email blogchong@163.com
- * @QQ_G 191321336
- * @Weixin: blogchong
- * @Des 数据落地Mysql接口
+ * 数据落地Mysql接口
  */
 
 @SuppressWarnings("serial")
@@ -51,26 +45,18 @@ public class MysqlBolt implements IRichBolt {
 		}
 	}
 
-	public static void main(String[] args) {
-	}
-
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void prepare(Map stormConf, TopologyContext context,
-			OutputCollector collector) {
-
+	public void prepare(Map stormConf, TopologyContext context,OutputCollector collector) {
 		System.out.println("MysqlBolt	--	Start!");
 		this.collector = collector;
 		
 		if (!this.flag_par) {
-			System.out
-					.println("MetaSpout-- Erre: can't get the path of Spout.xml!");
+			System.out.println("MetaSpout-- Erre: can't get the path of Spout.xml!");
 		} else {
             // 调用检测线程
-			new ConfCheck(this.mysqlXml, MacroDef.HEART_BEAT,
-					MacroDef.Thread_type_mysqlbolt).start();
+			new ConfCheck(this.mysqlXml, MacroDef.HEART_BEAT,MacroDef.Thread_type_mysqlbolt).start();
 		}
-
 	}
 
     // 更改标志位
@@ -94,10 +80,7 @@ public class MysqlBolt implements IRichBolt {
 		this.from = MysqlXml.From;
 
 		if (!this.mysql.connSQL(host_port, database, username, password)) {
-
-			System.out
-					.println("MysqlBolt--Config errer, Please check Mysql-conf: "
-							+ this.mysqlXml);
+			System.out.println("MysqlBolt--Config errer, Please check Mysql-conf: " + this.mysqlXml);
 			flag_xml = false;
 		} else {
 			System.out.println("MysqlBolt-- test connect mysql success: " + this.mysqlXml);
@@ -111,8 +94,7 @@ public class MysqlBolt implements IRichBolt {
 		String str = input.getString(0);
 
 		if (!this.flag_par) {
-			System.out
-					.println("MysqlBolt-- Erre: can't get the path of Mysql.xml!");
+			System.out.println("MysqlBolt-- Erre: can't get the path of Mysql.xml!");
 		} else {
 
             // 检测配置文件是否更改
@@ -120,11 +102,9 @@ public class MysqlBolt implements IRichBolt {
                 // 配置文件发生更改则进行加载参数操作
 				Loading();
 				if (register != 0) {
-					System.out.println("MysqlBolt-- Conf Change: "
-							+ this.mysqlXml);
+					System.out.println("MysqlBolt-- Conf Change: " + this.mysqlXml);
 				} else {
-					System.out.println("MysqlBolt-- Conf Loaded: "
-							+ this.mysqlXml);
+					System.out.println("MysqlBolt-- Conf Loaded: " + this.mysqlXml);
 				}
 			}
 
@@ -133,8 +113,7 @@ public class MysqlBolt implements IRichBolt {
 				String sql = send_str(str);
 
 				if (!this.mysql.insertSQL(sql)) {
-					System.out
-							.println("MysqlBolt-- Erre: can't insert tuple into database!");
+					System.out.println("MysqlBolt-- Erre: can't insert tuple into database!");
 					System.out.println("MysqlBolt-- Error Tuple: " + str);
 					System.out.println("SQL: " + sql);
 				}
@@ -158,9 +137,7 @@ public class MysqlBolt implements IRichBolt {
 				send_tmp = send_tmp + field[i] + "', '";
 			}
 		}
-		String send = "insert into " + this.from
-				+ "(domain, value, time, validity, seller) values (" + send_tmp
-				+ ");";
+		String send = "insert into " + this.from + "(domain, value, time, validity, seller) values (" + send_tmp + ");";
 
 		return send;
 	}
