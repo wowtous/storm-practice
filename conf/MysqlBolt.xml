@@ -3,15 +3,15 @@
 	<!--MysqlBolt参数-->
 	<Parameter>
 		<!--Mysql host地址及访问端口-->
-		<Host_port>192.168.5.240:3306</Host_port>
+		<Host_port>mysql:3306</Host_port>
 		<!--数据库名-->
-		<Database>blogchong</Database>
+		<Database>test</Database>
 		<!--表名-->
 		<From>storm</From>
 		<!--用户名-->
 		<Username>root</Username>
 		<!--密码-->
-		<Password>blogchong</Password>
+		<Password>mysql</Password>
 	</Parameter>
 </MysqlBolt>
 
