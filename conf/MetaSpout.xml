@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MetaSpout>
+	<!--MetaSpout参数-->
+	<Parameter>
+		<!--MetaQ消息队列-->
+		<MetaRevTopic>blogchong-test</MetaRevTopic>
+		<!--MetaQ服务地址-->
+		<MetaZkConnect>192.168.5.241:2181</MetaZkConnect>
+		<!--MetaQ服务路径-->
+		<MetaZkRoot>/meta</MetaZkRoot>
+		<!--MetaQ消费者组ID-->
+		<MetaConsumerConf>blogchong06</MetaConsumerConf>
+	</Parameter>
+</MetaSpout>
+
