@@ -22,10 +22,8 @@ public class PairCountBolt extends BaseRichBolt {
 	
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void prepare(Map conf, 
-			TopologyContext topologyContext,
-			OutputCollector outputCollector) {
-		this.collector = outputCollector;
+	public void prepare(Map conf, TopologyContext context, OutputCollector collector) {
+		this.collector = collector;
 		pairCounts = new HashMap<>();
 	}
 
@@ -47,9 +45,8 @@ public class PairCountBolt extends BaseRichBolt {
 	}
 
 	@Override
-	public void declareOutputFields(
-			OutputFieldsDeclarer outputFieldsDeclarer) {
-		outputFieldsDeclarer.declare(new Fields(
+	public void declareOutputFields(OutputFieldsDeclarer declarer) {
+		declarer.declare(new Fields(
 				FieldNames.ITEM1,
 				FieldNames.ITEM2,
 				FieldNames.PAIR_COUNT

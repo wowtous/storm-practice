@@ -22,16 +22,13 @@ public class VisitorStatsBolt extends BaseRichBolt {
 	
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void prepare(Map conf, 
-			TopologyContext topologyContext,
-			OutputCollector outputCollector) {
-		this.collector = outputCollector;
+	public void prepare(Map conf, TopologyContext context, OutputCollector collector) {
+		this.collector = collector;
 	}
 
 	@Override
 	public void execute(Tuple tuple) {
-		boolean unique = Boolean.parseBoolean(
-				tuple.getStringByField(FieldNames.UNIQUE));
+		boolean unique = Boolean.parseBoolean(tuple.getStringByField(FieldNames.UNIQUE));
 		
 		if ( unique ) {
 			uniqueCount ++;
@@ -40,9 +37,8 @@ public class VisitorStatsBolt extends BaseRichBolt {
 	}
 
 	@Override
-	public void declareOutputFields(
-			OutputFieldsDeclarer outputFieldsDeclarer) {
-		outputFieldsDeclarer.declare(new Fields(
+	public void declareOutputFields(OutputFieldsDeclarer declarer) {
+		declarer.declare(new Fields(
 				FieldNames.TOTAL_COUNT,
 				FieldNames.TOTAL_UNIQUE
 		));

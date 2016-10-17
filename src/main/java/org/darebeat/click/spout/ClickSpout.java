@@ -18,7 +18,6 @@ import java.util.Map;
 public class ClickSpout extends BaseRichSpout {
 
 	private static final long serialVersionUID = 3757047085011759927L;
-
 	public static Logger LOG = Logger.getLogger(ClickSpout.class);
 	
 	private Jedis jedis;
@@ -28,14 +27,11 @@ public class ClickSpout extends BaseRichSpout {
 	
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void open(Map conf, 
-			TopologyContext topologyContext,
-			SpoutOutputCollector spoutOutputCollector) {
-		this.collector = spoutOutputCollector;
+	public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
+		this.collector = collector;
 		
 		host = conf.get(ConfKeys.REDIS_HOST).toString();
-		port = Integer.valueOf(
-				conf.get(ConfKeys.REDIS_PORT).toString());
+		port = Integer.valueOf(conf.get(ConfKeys.REDIS_PORT).toString());
 		connectToRedis();
 	}
 
@@ -54,8 +50,7 @@ public class ClickSpout extends BaseRichSpout {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		}
-		else {
+		} else {
 			JSONObject obj = (JSONObject)JSONValue.parse(content);
 			String ip = obj.get(FieldNames.IP).toString();
 			String url = obj.get(FieldNames.URL).toString();
@@ -66,9 +61,8 @@ public class ClickSpout extends BaseRichSpout {
 	}
 
 	@Override
-	public void declareOutputFields(
-			OutputFieldsDeclarer outputFieldsDeclarer) {
-		outputFieldsDeclarer.declare(new Fields(
+	public void declareOutputFields(OutputFieldsDeclarer declarer) {
+		declarer.declare(new Fields(
 				FieldNames.IP,
 				FieldNames.URL,
 				FieldNames.CLIENT_KEY

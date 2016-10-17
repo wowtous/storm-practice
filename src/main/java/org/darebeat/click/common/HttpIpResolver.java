@@ -13,7 +13,7 @@ import java.net.URLConnection;
 public class HttpIpResolver implements IPResolver, Serializable {
 
 	private static final long serialVersionUID = 877307722723747802L;
-	private static String url = "http://api.hostip.info/get_json.php";
+	private static String url = "http://ip-api.com/json";
 	
 	@Override
 	public JSONObject resolveIP(String ip) {
@@ -21,11 +21,9 @@ public class HttpIpResolver implements IPResolver, Serializable {
 		BufferedReader in = null;
 
 		try {
-			geoUrl = new URL(url + "?ip=" + ip);
+			geoUrl = new URL(url + "/" + ip);
 			URLConnection connection = geoUrl.openConnection();
-			in = new BufferedReader(
-					new InputStreamReader(
-							connection.getInputStream()));
+			in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			
 			JSONObject json = (JSONObject)JSONValue.parse(in);
 			

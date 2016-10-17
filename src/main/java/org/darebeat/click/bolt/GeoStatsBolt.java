@@ -24,8 +24,7 @@ public class GeoStatsBolt extends BaseRichBolt {
 		private static final int COUNT_INDEX = 0;
 		private static final int PERCENTAGE_INDEX = 1;
 		private String countryName;
-		private Map<String, List<Integer>> cityStats =
-				new HashMap<>();
+		private Map<String, List<Integer>> cityStats = new HashMap<>();
 		
 		public CountryStats(String countryName) {
 			this.countryName = countryName;
@@ -34,21 +33,16 @@ public class GeoStatsBolt extends BaseRichBolt {
 		public void cityFound(String cityName) {
 			countryTotal ++;
 			if ( cityStats.containsKey(cityName) ) {
-				cityStats.get(cityName).set(COUNT_INDEX, 
-						cityStats.get(cityName)
-						.get(COUNT_INDEX).intValue() + 1);
-			}
-			else {
+				cityStats.get(cityName).set(COUNT_INDEX, cityStats.get(cityName).get(COUNT_INDEX).intValue() + 1);
+			} else {
 				List<Integer> list = new LinkedList<>();
 				list.add(1);
 				list.add(0);
 				cityStats.put(cityName, list);
 			}
 			
-			double percent = (double)cityStats
-					.get(cityName).get(COUNT_INDEX).intValue() / countryTotal;
-			cityStats.get(cityName).set(PERCENTAGE_INDEX, 
-					(int)percent);
+			double percent = (double)cityStats.get(cityName).get(COUNT_INDEX).intValue() / countryTotal;
+			cityStats.get(cityName).set(PERCENTAGE_INDEX, (int)percent);
 		}
 		
 		public int getCountryTotal() {
@@ -56,8 +50,7 @@ public class GeoStatsBolt extends BaseRichBolt {
 		}
 		
 		public int getCityTotal(String cityName) {
-			return cityStats.get(cityName).
-					get(COUNT_INDEX).intValue();
+			return cityStats.get(cityName).get(COUNT_INDEX).intValue();
 		}
 		
 		public String toString() {
@@ -72,9 +65,7 @@ public class GeoStatsBolt extends BaseRichBolt {
 	
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void prepare(Map conf, 
-			TopologyContext topologyContext,
-			OutputCollector outputCollector) {
+	public void prepare(Map conf, TopologyContext topologyContext, OutputCollector outputCollector) {
 		this.outputCollector = outputCollector;
 	}
 
@@ -95,9 +86,8 @@ public class GeoStatsBolt extends BaseRichBolt {
 	}
 
 	@Override
-	public void declareOutputFields(
-			OutputFieldsDeclarer outputFieldsDeclarer) {
-		outputFieldsDeclarer.declare(new Fields(
+	public void declareOutputFields(OutputFieldsDeclarer declarer) {
+		declarer.declare(new Fields(
 				FieldNames.COUNTRY,
 				FieldNames.COUNTRY_TOTAL,
 				FieldNames.CITY,

@@ -24,10 +24,8 @@ public class SplitBolt extends BaseRichBolt {
 	
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void prepare(Map conf, 
-			TopologyContext topologyContext,
-			OutputCollector outputCollector) {
-		this.collector = outputCollector;
+	public void prepare(Map conf, TopologyContext context, OutputCollector collector) {
+		this.collector = collector;
 		orderItems = new HashMap<>();
 	}
 
@@ -52,9 +50,8 @@ public class SplitBolt extends BaseRichBolt {
 	}
 
 	@Override
-	public void declareOutputFields(
-			OutputFieldsDeclarer outputFieldsDeclarer) {
-		outputFieldsDeclarer.declare(new Fields(
+	public void declareOutputFields(OutputFieldsDeclarer declarer) {
+		declarer.declare(new Fields(
 				FieldNames.ITEM1,
 				FieldNames.ITEM2
 		));

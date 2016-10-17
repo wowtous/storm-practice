@@ -21,10 +21,8 @@ public class CommandSpout extends BaseRichSpout {
 	
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void open(Map conf, 
-			TopologyContext topologyContext,
-			SpoutOutputCollector spoutOutputCollector) {
-		this.collector = spoutOutputCollector;
+	public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
+		this.collector = collector;
 	}
 
 	@Override
@@ -39,11 +37,8 @@ public class CommandSpout extends BaseRichSpout {
 	}
 
 	@Override
-	public void declareOutputFields(
-			OutputFieldsDeclarer outputFieldsDeclarer) {
-		outputFieldsDeclarer.declare(new Fields(
-				FieldNames.COMMAND
-		));
+	public void declareOutputFields(OutputFieldsDeclarer declarer) {
+		declarer.declare(new Fields(FieldNames.COMMAND));
 	}
 
 }

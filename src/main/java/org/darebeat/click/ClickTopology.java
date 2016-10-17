@@ -29,29 +29,18 @@ public class ClickTopology {
 		
 		if ( args != null && args.length > 1 ) {
 			topology.runCluster(args[0], args[1]);
-		}
-		else {
-			System.out.println(
-					"Running in local mode" +
-					"\nRedis ip missing for cluster run"
-			);
+		} else {
+			System.out.println("Running in local mode\nRedis ip missing for cluster run");
 			topology.runLocal(10000);
 		}
 	}
 
 	public ClickTopology() {
 		builder.setSpout("clickSpout", new ClickSpout(), 10);
-		builder.setBolt("repeatBolt", new RepeatVisitBolt(), 10)
-			.shuffleGrouping("clickSpout");
-		builder.setBolt("geographyBolt", 
-				new GeographyBolt(new HttpIpResolver()), 10)
-				.shuffleGrouping("clickSpout");
-		builder.setBolt("totalStats", new VisitorStatsBolt(), 1)
-			.globalGrouping("repeatBolt");
-		
-		builder.setBolt("geoStats", new GeoStatsBolt(), 10)
-			.fieldsGrouping("geographyBolt", 
-					new Fields(FieldNames.COUNTRY));
+		builder.setBolt("repeatBolt", new RepeatVisitBolt(), 10).shuffleGrouping("clickSpout");
+		builder.setBolt("geographyBolt", new GeographyBolt(new HttpIpResolver()), 10).shuffleGrouping("clickSpout");
+		builder.setBolt("totalStats", new VisitorStatsBolt(), 1).globalGrouping("repeatBolt");
+		builder.setBolt("geoStats", new GeoStatsBolt(), 10).fieldsGrouping("geographyBolt", new Fields(FieldNames.COUNTRY));
 	}
 	
 	public TopologyBuilder getBuilder() {
@@ -64,11 +53,10 @@ public class ClickTopology {
 	
 	private void runLocal(int runTime) {
 		conf.setDebug(true);
-		conf.put(ConfKeys.REDIS_HOST, "localhost");
+		conf.put(ConfKeys.REDIS_HOST, "redis");
 		conf.put(ConfKeys.REDIS_PORT, "6379");
 		cluster = new LocalCluster();
-		cluster.submitTopology("test", conf, 
-				builder.createTopology());
+		cluster.submitTopology("test", conf, builder.createTopology());
 		
 		if ( runTime > 0 ) {
 			Utils.sleep(runTime);
@@ -87,8 +75,7 @@ public class ClickTopology {
 		conf.setNumWorkers(20);
 		conf.put(ConfKeys.REDIS_HOST, redisHost);
 		conf.put(ConfKeys.REDIS_PORT, "6379");
-		StormSubmitter.submitTopology(name, conf,
-				builder.createTopology());
+		StormSubmitter.submitTopology(name, conf, builder.createTopology());
 	}
 
 }

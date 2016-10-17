@@ -28,13 +28,10 @@ public class FilterBolt extends BaseRichBolt {
 	
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void prepare(Map conf, 
-			TopologyContext topologyContext,
-			OutputCollector outputCollector) {
-		this.collector = outputCollector;
+	public void prepare(Map conf, TopologyContext context, OutputCollector collector) {
+		this.collector = collector;
 		host = conf.get(ConfKeys.REDIS_HOST).toString();
-		port = Integer.valueOf(
-				conf.get(ConfKeys.REDIS_PORT).toString());
+		port = Integer.valueOf(conf.get(ConfKeys.REDIS_PORT).toString());
 		connectToRedis();
 	}
 
@@ -56,8 +53,7 @@ public class FilterBolt extends BaseRichBolt {
 		if ( tuple.getFields().get(2).equals(FieldNames.SUPPORT) ) {
 			support = tuple.getDoubleByField(FieldNames.SUPPORT);
 			jedis.hset("supports", pairString, String.valueOf(support));
-		}
-		else if ( tuple.getFields().get(2).equals(FieldNames.CONFIDENCE) ) {
+		} else if ( tuple.getFields().get(2).equals(FieldNames.CONFIDENCE) ) {
 			confidence = tuple.getDoubleByField(FieldNames.CONFIDENCE);
 			jedis.hset("confidences", pairString, String.valueOf(confidence));
 		}
@@ -77,16 +73,14 @@ public class FilterBolt extends BaseRichBolt {
 			jedis.hset("recommendedPairs", pair.toString(), pairValue.toJSONString());
 			
 			collector.emit(new Values(item1, item2, support, confidence));
-		}
-		else {
+		} else {
 			jedis.hdel("recommendedPairs", pair.toString());
 		}
 	}
 
 	@Override
-	public void declareOutputFields(
-			OutputFieldsDeclarer outputFieldsDeclarer) {
-		outputFieldsDeclarer.declare(new Fields(
+	public void declareOutputFields(OutputFieldsDeclarer declarer) {
+		declarer.declare(new Fields(
 				FieldNames.ITEM1,
 				FieldNames.ITEM2,
 				FieldNames.SUPPORT,

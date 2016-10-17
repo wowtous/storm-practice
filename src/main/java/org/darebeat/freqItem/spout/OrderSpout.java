@@ -29,14 +29,11 @@ public class OrderSpout extends BaseRichSpout {
 	
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void open(Map conf, 
-			TopologyContext topologyContext,
-			SpoutOutputCollector spoutOutputCollector) {
-		this.collector = spoutOutputCollector;
+	public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
+		this.collector = collector;
 		
 		host = conf.get(ConfKeys.REDIS_HOST).toString();
-		port = Integer.valueOf(
-				conf.get(ConfKeys.REDIS_PORT).toString());
+		port = Integer.valueOf(conf.get(ConfKeys.REDIS_PORT).toString());
 		connectToRedis();
 	}
 
@@ -55,8 +52,7 @@ public class OrderSpout extends BaseRichSpout {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		}
-		else {
+		} else {
 			JSONObject obj = (JSONObject) JSONValue.parse(content);
 			String id = obj.get(FieldNames.ID).toString();
 			JSONArray items = (JSONArray)obj.get(FieldNames.ITEMS);
@@ -68,8 +64,7 @@ public class OrderSpout extends BaseRichSpout {
 				collector.emit(new Values(id, name, count));
 				if ( jedis.hexists("itemCounts", name) ) {
 					jedis.hincrBy("itemCounts", name, 1);
-				}
-				else {
+				} else {
 					jedis.hset("itemCounts", name, "1");
 				}
 			}
@@ -77,9 +72,8 @@ public class OrderSpout extends BaseRichSpout {
 	}
 
 	@Override
-	public void declareOutputFields(
-			OutputFieldsDeclarer outputFieldsDeclarer) {
-		outputFieldsDeclarer.declare(new Fields(
+	public void declareOutputFields(OutputFieldsDeclarer declarer) {
+		declarer.declare(new Fields(
 				FieldNames.ID,
 				FieldNames.NAME,
 				FieldNames.COUNT

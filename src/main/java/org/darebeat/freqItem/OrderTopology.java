@@ -41,13 +41,10 @@ public class OrderTopology {
 		builder.setSpout("orderSpout", new OrderSpout(), 5);
 		builder.setSpout("commandSpout", new CommandSpout(), 1);
 		
-		builder.setBolt("splitBolt", new SplitBolt(), 5).
-			fieldsGrouping("orderSpout", new Fields(FieldNames.ID));
+		builder.setBolt("splitBolt", new SplitBolt(), 5).fieldsGrouping("orderSpout", new Fields(FieldNames.ID));
 		
-		builder.setBolt("pairCountBolt", new PairCountBolt(), 5).
-			fieldsGrouping("splitBolt", new Fields(FieldNames.ITEM1, FieldNames.ITEM2));
-		builder.setBolt("pairTotalCountBolt", new PairTotalCountBolt(), 1).
-			globalGrouping("splitBolt");
+		builder.setBolt("pairCountBolt", new PairCountBolt(), 5).fieldsGrouping("splitBolt", new Fields(FieldNames.ITEM1, FieldNames.ITEM2));
+		builder.setBolt("pairTotalCountBolt", new PairTotalCountBolt(), 1).globalGrouping("splitBolt");
 
 		builder.setBolt("supportComputeBolt", new SupportComputeBolt(), 5).
 			allGrouping("pairTotalCountBolt").
@@ -77,7 +74,7 @@ public class OrderTopology {
 	
 	private void runLocal(int runTime) {
 		conf.setDebug(true);
-		conf.put(ConfKeys.REDIS_HOST, "localhost");
+		conf.put(ConfKeys.REDIS_HOST, "redis");
 		conf.put(ConfKeys.REDIS_PORT, "6379");
 		cluster = new LocalCluster();
 		cluster.submitTopology("test", conf, 

@@ -20,10 +20,8 @@ public class PairTotalCountBolt extends BaseRichBolt {
 	
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void prepare(Map conf, 
-			TopologyContext topologyContext,
-			OutputCollector outputCollector) {
-		this.collector = outputCollector;
+	public void prepare(Map conf, TopologyContext context, OutputCollector collector) {
+		this.collector = collector;
 		totalCount = 0;
 	}
 
@@ -34,10 +32,7 @@ public class PairTotalCountBolt extends BaseRichBolt {
 	}
 
 	@Override
-	public void declareOutputFields(
-			OutputFieldsDeclarer outputFieldsDeclarer) {
-		outputFieldsDeclarer.declare(new Fields(
-				FieldNames.TOTAL_COUNT
-		));
+	public void declareOutputFields(OutputFieldsDeclarer declarer) {
+		declarer.declare(new Fields(FieldNames.TOTAL_COUNT));
 	}
 }

@@ -24,13 +24,10 @@ public class RepeatVisitBolt extends BaseRichBolt {
 	
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void prepare(Map conf, 
-			TopologyContext topologyContext,
-			OutputCollector outputCollector) {
-		this.collector = outputCollector;
+	public void prepare(Map conf, TopologyContext context, OutputCollector collector) {
+		this.collector = collector;
 		host = conf.get(ConfKeys.REDIS_HOST).toString();
-		port = Integer.valueOf(
-				conf.get(ConfKeys.REDIS_PORT).toString());
+		port = Integer.valueOf(conf.get(ConfKeys.REDIS_PORT).toString());
 		connectToRedis();
 	}
 
@@ -53,8 +50,7 @@ public class RepeatVisitBolt extends BaseRichBolt {
 					url,
 					Boolean.TRUE.toString()
 			));
-		}
-		else {
+		} else {
 			collector.emit(new Values(
 					clientKey,
 					url,
@@ -64,9 +60,8 @@ public class RepeatVisitBolt extends BaseRichBolt {
 	}
 
 	@Override
-	public void declareOutputFields(
-			OutputFieldsDeclarer outputFieldsDeclarer) {
-		outputFieldsDeclarer.declare(new Fields(
+	public void declareOutputFields(OutputFieldsDeclarer declarer) {
+		declarer.declare(new Fields(
 				FieldNames.CLIENT_KEY,
 				FieldNames.URL,
 				FieldNames.UNIQUE

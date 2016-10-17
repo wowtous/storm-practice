@@ -27,13 +27,10 @@ public class ConfidenceComputeBolt extends BaseRichBolt {
 	
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void prepare(Map conf,
-			TopologyContext topologyContext,
-			OutputCollector outputCollector) {
+	public void prepare(Map conf, TopologyContext topologyContext, OutputCollector outputCollector) {
 		this.collector = outputCollector;
 		host = conf.get(ConfKeys.REDIS_HOST).toString();
-		port = Integer.valueOf(
-				conf.get(ConfKeys.REDIS_PORT).toString());
+		port = Integer.valueOf(conf.get(ConfKeys.REDIS_PORT).toString());
 		connectToRedis();
 		
 		pairCounts = new HashMap<>();
@@ -51,16 +48,14 @@ public class ConfidenceComputeBolt extends BaseRichBolt {
 			String item2 = tuple.getStringByField(FieldNames.ITEM2);
 			int pairCount = tuple.getIntegerByField(FieldNames.PAIR_COUNT);
 			pairCounts.put(new ItemPair(item1, item2), pairCount);
-		}
-		else if ( tuple.getFields().get(0).equals(FieldNames.COMMAND) ) {
+		} else if ( tuple.getFields().get(0).equals(FieldNames.COMMAND) ) {
 			for ( ItemPair itemPair : pairCounts.keySet() ) {
 				int item1Count = Integer.parseInt(jedis.hget("itemCounts", itemPair.getItem1()));
 				int item2Count = Integer.parseInt(jedis.hget("itemCounts", itemPair.getItem2()));
 				double itemConfidence = pairCounts.get(itemPair).intValue();
 				if ( item1Count < item2Count ) {
 					itemConfidence /= item1Count;
-				}
-				else {
+				} else {
 					itemConfidence /= item2Count;
 				}
 				
@@ -70,9 +65,8 @@ public class ConfidenceComputeBolt extends BaseRichBolt {
 	}
 
 	@Override
-	public void declareOutputFields(
-			OutputFieldsDeclarer outputFieldsDeclarer) {
-		outputFieldsDeclarer.declare(new Fields(
+	public void declareOutputFields(OutputFieldsDeclarer declarer) {
+		declarer.declare(new Fields(
 				FieldNames.ITEM1,
 				FieldNames.ITEM2,
 				FieldNames.CONFIDENCE
